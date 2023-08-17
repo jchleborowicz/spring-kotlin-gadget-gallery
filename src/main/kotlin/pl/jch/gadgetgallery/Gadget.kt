@@ -7,7 +7,7 @@ import jakarta.persistence.Table
 @Entity
 @Table(name = "GADGET")
 data class Gadget(
-    @Id val id: Int,
+    @Id val id: Long,
     val name: String,
     val category: String?,
     val availability: Boolean = true,
