@@ -4,11 +4,25 @@ http://localhost:8080/api/gadgets
 http://localhost:8080/api/gadgets/1
 
 ###
+http://localhost:8080/api/gadgets/2
+
+###
 POST http://localhost:8080/api/gadgets
 Content-Type: application/json
 
 {
     "name": "Gizmo",
+    "category": "Awesome",
+    "availability": true,
+    "price": 3.14
+}
+
+###
+PUT http://localhost:8080/api/gadgets/1
+Content-Type: application/json
+
+{
+    "name": "Gizmo1",
     "category": "Awesome",
     "availability": true,
     "price": 3.14

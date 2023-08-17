@@ -18,9 +18,11 @@ class GadgetController(private val repository: GadgetRepository) {
 
     @GetMapping("/{id}")
     fun getGadget(@PathVariable id: Long): ResponseEntity<Gadget> = repository.findById(id)
-        .let {
-            if (it.isPresent) ResponseEntity<Gadget>(it.get(), HttpStatus.OK)
-            else ResponseEntity<Gadget>(HttpStatus.NOT_FOUND)
+        .map {
+            ResponseEntity<Gadget>(it, HttpStatus.OK)
+        }
+        .orElseGet {
+            ResponseEntity<Gadget>(HttpStatus.NOT_FOUND)
         }
 
     @PostMapping
@@ -33,4 +35,22 @@ class GadgetController(private val repository: GadgetRepository) {
         }
         return ResponseEntity(headers, HttpStatus.CREATED)
     }
+
+    @PutMapping("/{id}")
+    fun updateGadgetById(@PathVariable id: Long, @RequestBody gadget: Gadget): ResponseEntity<Gadget> =
+        repository.findById(id)
+            .map {
+                val updated = repository.save(
+                    it.copy(
+                        category = gadget.category,
+                        name = gadget.name,
+                        price = gadget.price,
+                        availability = gadget.availability
+                    )
+                )
+                ResponseEntity(updated, HttpStatus.OK)
+            }
+            .orElseGet {
+                ResponseEntity<Gadget>(HttpStatus.NOT_FOUND)
+            }
 }
