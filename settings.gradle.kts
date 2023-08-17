@@ -1,1 +1,1 @@
-rootProject.name = "spring-kotlin-gatget-gallery"
+rootProject.name = "spring-kotlin-gadget-gallery"
