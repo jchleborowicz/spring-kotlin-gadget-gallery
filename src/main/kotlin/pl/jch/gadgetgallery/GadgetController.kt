@@ -26,15 +26,16 @@ class GadgetController(private val repository: GadgetRepository) {
         }
 
     @PostMapping
-    fun addNewGadget(@RequestBody gadget: Gadget, uri: UriComponentsBuilder): ResponseEntity<Gadget> {
-        val persistedGadget: Gadget = repository.save(gadget)
-        val headers = HttpHeaders().apply {
-            location = uri.path("/api/gadgets/${persistedGadget.id}")
-                .build()
-                .toUri()
-        }
-        return ResponseEntity(headers, HttpStatus.CREATED)
-    }
+    fun addNewGadget(@RequestBody gadget: Gadget, uri: UriComponentsBuilder): ResponseEntity<Void> =
+        repository.save(gadget)
+            .let {
+                val headers = HttpHeaders().apply {
+                    location = uri.path("/api/gadgets/${it.id}")
+                        .build()
+                        .toUri()
+                }
+                ResponseEntity(headers, HttpStatus.CREATED)
+            }
 
     @PutMapping("/{id}")
     fun updateGadgetById(@PathVariable id: Long, @RequestBody gadget: Gadget): ResponseEntity<Gadget> =
@@ -50,7 +51,13 @@ class GadgetController(private val repository: GadgetRepository) {
                 )
                 ResponseEntity(updated, HttpStatus.OK)
             }
-            .orElseGet {
-                ResponseEntity<Gadget>(HttpStatus.NOT_FOUND)
-            }
+            .orElseGet { ResponseEntity<Gadget>(HttpStatus.NOT_FOUND) }
+
+    @DeleteMapping("/{id}")
+    fun deleteGadget(@PathVariable id: Long): ResponseEntity<Void> = repository.findById(id)
+        .map {
+            repository.delete(it)
+            ResponseEntity<Void>(HttpStatus.NO_CONTENT)
+        }
+        .orElseGet { ResponseEntity<Void>(HttpStatus.NOT_FOUND) }
 }
