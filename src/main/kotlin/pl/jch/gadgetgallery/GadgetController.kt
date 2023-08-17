@@ -1,11 +1,10 @@
 package pl.jch.gadgetgallery
 
+import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
+import org.springframework.web.util.UriComponentsBuilder
 
 @RestController
 @RequestMapping(path = ["/api/gadgets"])
@@ -20,7 +19,18 @@ class GadgetController(private val repository: GadgetRepository) {
     @GetMapping("/{id}")
     fun getGadget(@PathVariable id: Long): ResponseEntity<Gadget> = repository.findById(id)
         .let {
-            if (it.isPresent()) ResponseEntity<Gadget>(it.get(), HttpStatus.OK)
+            if (it.isPresent) ResponseEntity<Gadget>(it.get(), HttpStatus.OK)
             else ResponseEntity<Gadget>(HttpStatus.NOT_FOUND)
         }
+
+    @PostMapping
+    fun addNewGadget(@RequestBody gadget: Gadget, uri: UriComponentsBuilder): ResponseEntity<Gadget> {
+        val persistedGadget: Gadget = repository.save(gadget)
+        val headers = HttpHeaders().apply {
+            location = uri.path("/api/gadgets/${persistedGadget.id}")
+                .build()
+                .toUri()
+        }
+        return ResponseEntity(headers, HttpStatus.CREATED)
+    }
 }

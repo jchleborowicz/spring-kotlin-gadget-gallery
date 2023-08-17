@@ -2,3 +2,14 @@ http://localhost:8080/api/gadgets
 
 ###
 http://localhost:8080/api/gadgets/1
+
+###
+POST http://localhost:8080/api/gadgets
+Content-Type: application/json
+
+{
+    "name": "Gizmo",
+    "category": "Awesome",
+    "availability": true,
+    "price": 3.14
+}
