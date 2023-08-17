@@ -1,11 +1,11 @@
-package com.example.springkotlingatgetgallery
+package pl.jch.gadgetgallery
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class SpringKotlinGatgetGalleryApplication
+class SpringKotlinGadgetGalleryApplication
 
 fun main(args: Array<String>) {
-    runApplication<SpringKotlinGatgetGalleryApplication>(*args)
+    runApplication<SpringKotlinGadgetGalleryApplication>(*args)
 }
